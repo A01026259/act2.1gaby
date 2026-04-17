@@ -28,7 +28,6 @@ st.set_page_config(
 st.markdown(
     """
     <style>
-        /* ---------- APP ---------- */
         .stApp {
             background: linear-gradient(180deg, #050b16 0%, #0b1220 100%);
             color: #ffffff;
@@ -42,7 +41,6 @@ st.markdown(
             max-width: 1400px;
         }
 
-        /* ---------- SIDEBAR ---------- */
         section[data-testid="stSidebar"] {
             background: #060d18 !important;
             border-right: 1px solid rgba(255,255,255,0.08);
@@ -53,15 +51,13 @@ st.markdown(
         section[data-testid="stSidebar"] h3,
         section[data-testid="stSidebar"] p,
         section[data-testid="stSidebar"] label,
-        section[data-testid="stSidebar"] div:not([data-baseweb="select"]) {
+        section[data-testid="stSidebar"] span,
+        section[data-testid="stSidebar"] div {
             color: #ffffff !important;
+            opacity: 1 !important;
         }
 
-        /* ---------- TYPOGRAPHY ---------- */
-        h1, h2, h3, h4, h5, h6 {
-            color: #ffffff !important;
-        }
-
+        h1, h2, h3, h4, h5, h6,
         p, label, small, li {
             color: #ffffff !important;
         }
@@ -115,7 +111,6 @@ st.markdown(
             color: #ffffff !important;
         }
 
-        /* ---------- METRICS ---------- */
         div[data-testid="metric-container"] {
             background: rgba(4, 10, 20, 0.82);
             border: 1px solid rgba(255,255,255,0.08);
@@ -132,60 +127,14 @@ st.markdown(
             opacity: 1 !important;
         }
 
-        /* ---------- SELECTBOX FIX ---------- */
-        /* outer control */
-        div[data-baseweb="select"] > div {
-            background: #ffffff !important;
-            border-radius: 16px !important;
-            color: #111827 !important;
-        }
-
-        /* selected value wrapper and children */
-        div[data-baseweb="select"] > div > div {
-            color: #111827 !important;
-        }
-
-        div[data-baseweb="select"] span {
-            color: #111827 !important;
-            -webkit-text-fill-color: #111827 !important;
-        }
-
-        div[data-baseweb="select"] input {
-            color: #111827 !important;
-            -webkit-text-fill-color: #111827 !important;
-            caret-color: #111827 !important;
-        }
-
-        div[data-baseweb="select"] div[class*="singleValue"],
-        div[data-baseweb="select"] div[class*="SingleValue"],
-        div[data-baseweb="select"] div[class*="valueContainer"],
-        div[data-baseweb="select"] div[class*="ValueContainer"] {
-            color: #111827 !important;
-        }
-
-        div[data-baseweb="select"] svg {
-            fill: #111827 !important;
-            color: #111827 !important;
-        }
-
-        /* dropdown list */
-        div[role="listbox"],
-        div[role="option"] {
-            color: #111827 !important;
-        }
-
-        div[role="listbox"] * {
-            color: #111827 !important;
-        }
-
-        /* ---------- NUMBER INPUT ---------- */
+        /* Number input text dark inside white box */
         div[data-baseweb="input"] input,
         div[data-testid="stNumberInput"] input {
             color: #111827 !important;
             -webkit-text-fill-color: #111827 !important;
         }
 
-        /* ---------- RADIO / SLIDER ---------- */
+        /* Make radio labels always visible */
         div[data-testid="stRadio"] label,
         div[data-testid="stSlider"] label {
             color: #ffffff !important;
@@ -412,9 +361,17 @@ st.divider()
 # SIDEBAR
 # ============================================================
 st.sidebar.header("Parámetros de mercado")
+st.sidebar.markdown("**Activo**")
 
-activo_seleccionado = st.sidebar.selectbox("Activo", list(ACTIVOS.keys()))
+activo_seleccionado = st.sidebar.radio(
+    label="Selecciona un activo",
+    options=list(ACTIVOS.keys()),
+    index=0,
+    label_visibility="collapsed"
+)
 ticker = ACTIVOS[activo_seleccionado]
+
+st.sidebar.caption(f"Ticker seleccionado: {ticker}")
 
 anios = st.sidebar.slider("Años de historia", 1, 5, 1)
 
