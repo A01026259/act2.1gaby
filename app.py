@@ -23,26 +23,24 @@ st.set_page_config(
 )
 
 # ============================================================
-# ESTILOS GLOBALES (FORZAR BLANCO EN TODO EL TEXTO)
+# ESTILOS GLOBALES
 # ============================================================
 st.markdown(
     """
     <style>
-        /* Fondo general */
         .stApp {
             background: linear-gradient(180deg, #050b16 0%, #0b1220 100%);
             color: #ffffff !important;
         }
 
         .block-container {
-            padding-top: 2.6rem;
-            padding-bottom: 1.5rem;
+            padding-top: 1.8rem;
+            padding-bottom: 1.2rem;
             padding-left: 2rem;
             padding-right: 2rem;
             max-width: 1400px;
         }
 
-        /* Sidebar */
         section[data-testid="stSidebar"] {
             background: #060d18 !important;
             border-right: 1px solid rgba(255,255,255,0.08);
@@ -52,11 +50,7 @@ st.markdown(
             color: #ffffff !important;
         }
 
-        section[data-testid="stSidebar"] label {
-            color: #ffffff !important;
-            opacity: 1 !important;
-        }
-
+        section[data-testid="stSidebar"] label,
         section[data-testid="stSidebar"] p,
         section[data-testid="stSidebar"] span,
         section[data-testid="stSidebar"] div,
@@ -67,7 +61,6 @@ st.markdown(
             opacity: 1 !important;
         }
 
-        /* Texto general */
         html, body, [class*="css"] {
             color: #ffffff !important;
         }
@@ -79,31 +72,31 @@ st.markdown(
 
         h1, h2, h3, h4, h5, h6 {
             color: #ffffff !important;
+            margin-top: 0.2rem !important;
         }
 
-        /* Título principal */
         .main-title {
-            font-size: 2.9rem;
+            font-size: 2.7rem;
             font-weight: 800;
             color: #ffffff !important;
-            margin-top: 0.3rem;
-            margin-bottom: 0.35rem;
+            margin-top: 0rem;
+            margin-bottom: 0.2rem;
             letter-spacing: -0.03em;
-            line-height: 1.15;
+            line-height: 1.1;
         }
 
         .subtitle {
             color: #f8fafc !important;
-            font-size: 1.08rem;
-            margin-bottom: 0.95rem;
-            line-height: 1.5;
+            font-size: 1.05rem;
+            margin-bottom: 0.75rem;
+            line-height: 1.45;
         }
 
         .market-chip {
             display: inline-block;
             padding: 0.38rem 0.78rem;
             margin-right: 0.45rem;
-            margin-bottom: 0.4rem;
+            margin-bottom: 0.35rem;
             border-radius: 999px;
             background: rgba(255,255,255,0.05);
             border: 1px solid rgba(255,255,255,0.10);
@@ -111,7 +104,6 @@ st.markdown(
             font-size: 0.90rem;
         }
 
-        /* Subtítulos y texto auxiliar */
         .small-note {
             color: #ffffff !important;
             font-size: 0.95rem;
@@ -132,7 +124,6 @@ st.markdown(
             color: #ffffff !important;
         }
 
-        /* Métricas */
         div[data-testid="metric-container"] {
             background: rgba(4, 10, 20, 0.82);
             border: 1px solid rgba(255,255,255,0.08);
@@ -146,50 +137,48 @@ st.markdown(
             opacity: 1 !important;
         }
 
-        div[data-testid="metric-container"] label {
-            color: #ffffff !important;
-            opacity: 1 !important;
-        }
-
-        div[data-testid="metric-container"] [data-testid="stMetricLabel"] {
-            color: #ffffff !important;
-            opacity: 1 !important;
-        }
-
-        div[data-testid="metric-container"] [data-testid="stMetricValue"] {
-            color: #ffffff !important;
-            opacity: 1 !important;
-        }
-
+        div[data-testid="metric-container"] label,
+        div[data-testid="metric-container"] [data-testid="stMetricLabel"],
+        div[data-testid="metric-container"] [data-testid="stMetricValue"],
         div[data-testid="metric-container"] [data-testid="stMetricDelta"] {
             color: #ffffff !important;
             opacity: 1 !important;
         }
 
-        /* Selectbox / inputs / radio / sliders */
-        div[data-baseweb="select"] * {
-            color: #111827 !important;   /* dentro del recuadro blanco */
-        }
-
-        div[data-baseweb="input"] input {
-            color: #111827 !important;   /* dentro del input blanco */
-        }
-
-        div[data-testid="stNumberInput"] input {
+        /* SELECTBOX: texto negro dentro del recuadro blanco */
+        div[data-baseweb="select"] > div {
+            background-color: #ffffff !important;
             color: #111827 !important;
         }
 
-        div[data-testid="stRadio"] label {
-            color: #ffffff !important;
-            opacity: 1 !important;
+        div[data-baseweb="select"] span {
+            color: #111827 !important;
         }
 
+        div[data-baseweb="select"] svg {
+            fill: #111827 !important;
+            color: #111827 !important;
+        }
+
+        /* Opciones desplegables */
+        div[role="listbox"] * {
+            color: #111827 !important;
+        }
+
+        /* Number input: texto negro dentro del recuadro blanco */
+        div[data-baseweb="input"] input,
+        div[data-testid="stNumberInput"] input {
+            color: #111827 !important;
+            -webkit-text-fill-color: #111827 !important;
+        }
+
+        /* Radio / slider labels */
+        div[data-testid="stRadio"] label,
         div[data-testid="stSlider"] label {
             color: #ffffff !important;
             opacity: 1 !important;
         }
 
-        /* Caption y markdown */
         .stCaption, .stCaption * {
             color: #ffffff !important;
             opacity: 0.95 !important;
@@ -200,15 +189,15 @@ st.markdown(
             opacity: 1 !important;
         }
 
-        /* Dataframe */
         [data-testid="stDataFrame"] {
             border-radius: 14px;
             overflow: hidden;
         }
 
-        /* Líneas */
         hr {
             border-color: rgba(255,255,255,0.08);
+            margin-top: 0.8rem !important;
+            margin-bottom: 0.8rem !important;
         }
     </style>
     """,
@@ -401,6 +390,7 @@ st.markdown(
 )
 
 st.caption("Alumna: Alejandra Martínez Cuen · Actividad 2.1.1 y 2.1.2")
+st.markdown("<div style='height: 0.15rem;'></div>", unsafe_allow_html=True)
 st.divider()
 
 
