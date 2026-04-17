@@ -129,19 +129,19 @@ st.header(f"Resultados para {activo_seleccionado}")
 
 if abs(var_param) > umbral_var:
     st.error(
-        f"🔴 **ALERTA DE RIESGO ALTO** — El VaR ({abs(var_param)*100:.2f}%) "
+        f" **ALERTA DE RIESGO ALTO** — El VaR ({abs(var_param)*100:.2f}%) "
         f"supera el umbral establecido ({umbral_var*100:.1f}%).\n\n"
         f"**Medidas sugeridas:** diversificar la cartera, aplicar coberturas "
         f"con opciones o futuros, reducir exposición y establecer stop-loss."
     )
 elif abs(var_param) > umbral_var * 0.7:
     st.warning(
-        f"🟡 **Riesgo moderado** — El VaR está cerca del umbral. "
+        f" **Riesgo moderado** — El VaR está cerca del umbral. "
         f"Monitorear diariamente."
     )
 else:
     st.success(
-        f"🟢 **Riesgo controlado** — El VaR ({abs(var_param)*100:.2f}%) "
+        f" **Riesgo controlado** — El VaR ({abs(var_param)*100:.2f}%) "
         f"se encuentra dentro del umbral aceptable ({umbral_var*100:.1f}%)."
     )
 
