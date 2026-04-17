@@ -28,35 +28,42 @@ st.set_page_config(
 st.markdown(
     """
     <style>
+        /* ---------- APP ---------- */
         .stApp {
             background: linear-gradient(180deg, #050b16 0%, #0b1220 100%);
-            color: #ffffff !important;
+            color: #ffffff;
         }
 
         .block-container {
-            padding-top: 1.8rem;
+            padding-top: 1.6rem;
             padding-bottom: 1.2rem;
             padding-left: 2rem;
             padding-right: 2rem;
             max-width: 1400px;
         }
 
+        /* ---------- SIDEBAR ---------- */
         section[data-testid="stSidebar"] {
             background: #060d18 !important;
             border-right: 1px solid rgba(255,255,255,0.08);
         }
 
-        section[data-testid="stSidebar"] * {
+        section[data-testid="stSidebar"] h1,
+        section[data-testid="stSidebar"] h2,
+        section[data-testid="stSidebar"] h3,
+        section[data-testid="stSidebar"] p,
+        section[data-testid="stSidebar"] label,
+        section[data-testid="stSidebar"] div:not([data-baseweb="select"]) {
             color: #ffffff !important;
         }
 
-        html, body, [class*="css"] {
+        /* ---------- TYPOGRAPHY ---------- */
+        h1, h2, h3, h4, h5, h6 {
             color: #ffffff !important;
         }
 
-        p, span, div, label, small, li, h1, h2, h3, h4, h5, h6 {
+        p, label, small, li {
             color: #ffffff !important;
-            opacity: 1 !important;
         }
 
         .main-title {
@@ -72,7 +79,7 @@ st.markdown(
         .subtitle {
             color: #f8fafc !important;
             font-size: 1.05rem;
-            margin-bottom: 0.75rem;
+            margin-bottom: 0.70rem;
             line-height: 1.45;
         }
 
@@ -104,6 +111,11 @@ st.markdown(
             font-size: 1rem;
         }
 
+        .report-box * {
+            color: #ffffff !important;
+        }
+
+        /* ---------- METRICS ---------- */
         div[data-testid="metric-container"] {
             background: rgba(4, 10, 20, 0.82);
             border: 1px solid rgba(255,255,255,0.08);
@@ -112,54 +124,68 @@ st.markdown(
             box-shadow: inset 0 1px 0 rgba(255,255,255,0.03);
         }
 
-        div[data-testid="metric-container"] * {
+        div[data-testid="metric-container"] label,
+        div[data-testid="metric-container"] [data-testid="stMetricLabel"],
+        div[data-testid="metric-container"] [data-testid="stMetricValue"],
+        div[data-testid="metric-container"] [data-testid="stMetricDelta"] {
             color: #ffffff !important;
             opacity: 1 !important;
         }
 
-        /* ===== SELECTBOX FIX ===== */
-        /* White box */
+        /* ---------- SELECTBOX FIX ---------- */
+        /* outer control */
         div[data-baseweb="select"] > div {
             background: #ffffff !important;
             border-radius: 16px !important;
+            color: #111827 !important;
         }
 
-        /* Selected value text */
-        div[data-baseweb="select"] div[class*="singleValue"] {
+        /* selected value wrapper and children */
+        div[data-baseweb="select"] > div > div {
+            color: #111827 !important;
+        }
+
+        div[data-baseweb="select"] span {
             color: #111827 !important;
             -webkit-text-fill-color: #111827 !important;
         }
 
-        /* Search/input text inside select */
         div[data-baseweb="select"] input {
             color: #111827 !important;
             -webkit-text-fill-color: #111827 !important;
+            caret-color: #111827 !important;
         }
 
-        /* Placeholder text */
-        div[data-baseweb="select"] div[class*="placeholder"] {
-            color: #6b7280 !important;
+        div[data-baseweb="select"] div[class*="singleValue"],
+        div[data-baseweb="select"] div[class*="SingleValue"],
+        div[data-baseweb="select"] div[class*="valueContainer"],
+        div[data-baseweb="select"] div[class*="ValueContainer"] {
+            color: #111827 !important;
         }
 
-        /* Dropdown arrow */
         div[data-baseweb="select"] svg {
             fill: #111827 !important;
             color: #111827 !important;
         }
 
-        /* Dropdown menu options */
+        /* dropdown list */
+        div[role="listbox"],
+        div[role="option"] {
+            color: #111827 !important;
+        }
+
         div[role="listbox"] * {
             color: #111827 !important;
         }
 
-        /* Number input text stays dark inside white box */
+        /* ---------- NUMBER INPUT ---------- */
         div[data-baseweb="input"] input,
         div[data-testid="stNumberInput"] input {
             color: #111827 !important;
             -webkit-text-fill-color: #111827 !important;
         }
 
-        /* Keep radios/sliders white */
+        /* ---------- RADIO / SLIDER ---------- */
         div[data-testid="stRadio"] label,
         div[data-testid="stSlider"] label {
             color: #ffffff !important;
@@ -171,15 +197,21 @@ st.markdown(
             opacity: 0.95 !important;
         }
 
-        [data-testid="stMarkdownContainer"] * {
+        [data-testid="stMarkdownContainer"] p,
+        [data-testid="stMarkdownContainer"] li,
+        [data-testid="stMarkdownContainer"] strong {
             color: #ffffff !important;
-            opacity: 1 !important;
+        }
+
+        [data-testid="stDataFrame"] {
+            border-radius: 14px;
+            overflow: hidden;
         }
 
         hr {
             border-color: rgba(255,255,255,0.08);
-            margin-top: 0.8rem !important;
-            margin-bottom: 0.8rem !important;
+            margin-top: 0.7rem !important;
+            margin-bottom: 0.7rem !important;
         }
     </style>
     """,
@@ -372,7 +404,7 @@ st.markdown(
 )
 
 st.caption("Alumna: Alejandra Martínez Cuen · Actividad 2.1.1 y 2.1.2")
-st.markdown("<div style='height: 0.15rem;'></div>", unsafe_allow_html=True)
+st.markdown("<div style='height: 0.10rem;'></div>", unsafe_allow_html=True)
 st.divider()
 
 
