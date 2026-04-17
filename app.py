@@ -22,7 +22,9 @@ st.set_page_config(
     layout="wide"
 )
 
-# ---------- Estilos oscuros ----------
+# ============================================================
+# ESTILOS
+# ============================================================
 st.markdown(
     """
     <style>
@@ -32,8 +34,8 @@ st.markdown(
         }
 
         .block-container {
-            padding-top: 2.2rem;
-            padding-bottom: 1.2rem;
+            padding-top: 2.6rem;
+            padding-bottom: 1.5rem;
             padding-left: 2rem;
             padding-right: 2rem;
             max-width: 1400px;
@@ -45,17 +47,17 @@ st.markdown(
         }
 
         .main-title {
-            font-size: 3rem;
+            font-size: 2.9rem;
             font-weight: 800;
             color: #f9fafb;
-            margin-top: 0.2rem;
+            margin-top: 0.3rem;
             margin-bottom: 0.35rem;
             letter-spacing: -0.03em;
-            line-height: 1.1;
+            line-height: 1.15;
         }
 
         .subtitle {
-            color: #cbd5e1;
+            color: #d1d5db;
             font-size: 1.08rem;
             margin-bottom: 0.95rem;
             line-height: 1.5;
@@ -73,15 +75,6 @@ st.markdown(
             font-size: 0.90rem;
         }
 
-        .section-card {
-            background: rgba(12, 19, 34, 0.88);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 18px;
-            padding: 1.15rem 1.2rem;
-            margin-bottom: 1rem;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.22);
-        }
-
         .small-note {
             color: #d1d5db;
             font-size: 0.95rem;
@@ -94,7 +87,7 @@ st.markdown(
             border-radius: 16px;
             padding: 1.15rem 1.2rem;
             color: #f8fafc;
-            line-height: 1.7;
+            line-height: 1.75;
             font-size: 1rem;
         }
 
@@ -119,6 +112,11 @@ st.markdown(
         div[data-testid="metric-container"] [data-testid="stMetricDelta"] {
             color: #e5e7eb !important;
             opacity: 1 !important;
+        }
+
+        [data-testid="stDataFrame"] {
+            border-radius: 14px;
+            overflow: hidden;
         }
 
         h1, h2, h3, h4, h5, h6, p, label, span, div {
@@ -269,7 +267,7 @@ def layout_mercado(titulo: str, alto: int = 400) -> dict:
         paper_bgcolor="rgba(0,0,0,0)",
         plot_bgcolor="#0a1222",
         font=dict(color="#f8fafc", size=14),
-        margin=dict(l=20, r=20, t=65, b=20),
+        margin=dict(l=20, r=20, t=70, b=20),
         xaxis=dict(
             showgrid=True,
             gridcolor="rgba(255,255,255,0.08)",
@@ -407,7 +405,6 @@ else:
 # ============================================================
 # MÉTRICAS
 # ============================================================
-st.markdown('<div class="section-card">', unsafe_allow_html=True)
 st.subheader("Indicadores clave")
 
 c1, c2, c3, c4 = st.columns(4)
@@ -426,13 +423,12 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
-st.markdown("</div>", unsafe_allow_html=True)
+st.divider()
 
 
 # ============================================================
 # COMPARATIVA PRECIO VS FRECUENCIA
 # ============================================================
-st.markdown('<div class="section-card">', unsafe_allow_html=True)
 st.subheader("Comparativa visual: precio vs frecuencia de retornos")
 
 col_izq, col_der = st.columns(2)
@@ -480,22 +476,15 @@ with col_der:
     fig_hist_small.update_yaxes(title="Frecuencia")
     st.plotly_chart(fig_hist_small, use_container_width=True)
 
-st.markdown(
-    """
-    <div class="small-note">
-    Esta sección compara visualmente el comportamiento del precio frente a la frecuencia
-    de sus retornos, tal como solicita la actividad.
-    </div>
-    """,
-    unsafe_allow_html=True
+st.caption(
+    "Esta sección compara visualmente el comportamiento del precio frente a la frecuencia de sus retornos, tal como solicita la actividad."
 )
-st.markdown("</div>", unsafe_allow_html=True)
+st.divider()
 
 
 # ============================================================
 # HISTOGRAMA PRINCIPAL
 # ============================================================
-st.markdown('<div class="section-card">', unsafe_allow_html=True)
 st.subheader("Distribución de retornos diarios")
 
 fig_hist = go.Figure()
@@ -555,13 +544,12 @@ t4.metric("Percentil 99%", f"{q99 * 100:.2f}%")
 st.caption(
     "El histograma muestra la distribución de retornos diarios, marca claramente la línea del VaR en rojo y destaca la cola izquierda."
 )
-st.markdown("</div>", unsafe_allow_html=True)
+st.divider()
 
 
 # ============================================================
 # DRAWDOWN
 # ============================================================
-st.markdown('<div class="section-card">', unsafe_allow_html=True)
 st.subheader("Evolución del drawdown")
 
 fig_dd = go.Figure()
@@ -579,21 +567,15 @@ fig_dd.update_xaxes(title="Fecha")
 fig_dd.update_yaxes(title="Drawdown (%)")
 st.plotly_chart(fig_dd, use_container_width=True)
 
-st.markdown(
-    """
-    <div class="small-note">
-    El drawdown complementa el análisis de riesgo porque muestra la severidad de las caídas acumuladas desde máximos previos.
-    </div>
-    """,
-    unsafe_allow_html=True
+st.caption(
+    "El drawdown complementa el análisis de riesgo porque muestra la severidad de las caídas acumuladas desde máximos previos."
 )
-st.markdown("</div>", unsafe_allow_html=True)
+st.divider()
 
 
 # ============================================================
 # TABLA COMPARATIVA
 # ============================================================
-st.markdown('<div class="section-card">', unsafe_allow_html=True)
 st.subheader("Análisis comparativo de los 3 activos")
 
 df_comp = tabla_comparativa(anios, nivel_confianza, tasa_libre)
@@ -641,13 +623,12 @@ else:
     fig_comp.update_yaxes(title="Porcentaje (%)")
     st.plotly_chart(fig_comp, use_container_width=True)
 
-st.markdown("</div>", unsafe_allow_html=True)
+st.divider()
 
 
 # ============================================================
 # REPORTE
 # ============================================================
-st.markdown('<div class="section-card">', unsafe_allow_html=True)
 st.subheader("Reporte breve de análisis")
 
 if not df_comp.empty:
@@ -662,36 +643,29 @@ if not df_comp.empty:
     fila_riesgo = df_comp[df_comp["Activo"] == activo_mas_riesgoso].iloc[0]
     fila_estable = df_comp.sort_values("Volatilidad anual (%)", ascending=True).iloc[0]
 
-    reporte_html = f"""
-    <div class="report-box">
-        <p>
+    st.markdown(
+        f"""
+        <div class="report-box">
             En el periodo seleccionado de <b>{anios} año(s)</b>, el análisis confirma diferencias importantes entre los tres activos.
             <b>{activo_mas_vol}</b> presenta la mayor volatilidad anualizada, mientras que <b>{activo_peor_var}</b> muestra
             el VaR más severo bajo el nivel de confianza elegido. A su vez, <b>{activo_peor_dd}</b> registra el drawdown más profundo.
-        </p>
-
-        <p>
+            <br><br>
             Considerando de forma conjunta la volatilidad, el VaR y el máximo drawdown, el activo con <b>mayor riesgo</b>
             en esta ejecución es <b>{activo_mas_riesgoso}</b>. Este activo presenta una volatilidad anual de
             <b>{fila_riesgo['Volatilidad anual (%)']:.2f}%</b>, un VaR {int(nivel_confianza * 100)}% de
             <b>{fila_riesgo[var_col]:.2f}%</b> y un drawdown máximo de
             <b>{fila_riesgo['Máx. Drawdown (%)']:.2f}%</b>.
-        </p>
-
-        <p>
+            <br><br>
             Por otra parte, el activo relativamente más estable fue <b>{fila_estable['Activo']}</b>,
             con una volatilidad anual de <b>{fila_estable['Volatilidad anual (%)']:.2f}%</b>.
             En términos de retorno ajustado por riesgo, el mejor ratio de Sharpe corresponde a
             <b>{activo_mejor_sharpe}</b>.
-        </p>
-    </div>
-    """
-
-    st.markdown(reporte_html, unsafe_allow_html=True)
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 else:
     st.info("No fue posible generar el reporte comparativo.")
-
-st.markdown("</div>", unsafe_allow_html=True)
 
 
 # ============================================================
