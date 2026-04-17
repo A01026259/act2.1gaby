@@ -22,91 +22,103 @@ st.set_page_config(
     layout="wide"
 )
 
-# ---------- Estilos oscuros tipo mercado ----------
+# ---------- Estilos oscuros ----------
 st.markdown(
     """
     <style>
         .stApp {
-            background: linear-gradient(180deg, #0b0f14 0%, #111827 100%);
-            color: #f3f4f6;
+            background: linear-gradient(180deg, #050b16 0%, #0b1220 100%);
+            color: #f8fafc;
         }
 
         .block-container {
-            padding-top: 1.2rem;
-            padding-bottom: 1rem;
-            max-width: 1350px;
+            padding-top: 2.2rem;
+            padding-bottom: 1.2rem;
+            padding-left: 2rem;
+            padding-right: 2rem;
+            max-width: 1400px;
         }
 
         section[data-testid="stSidebar"] {
-            background: #0a0f1a;
+            background: #060d18;
             border-right: 1px solid rgba(255,255,255,0.08);
         }
 
         .main-title {
-            font-size: 2.35rem;
+            font-size: 3rem;
             font-weight: 800;
             color: #f9fafb;
-            margin-bottom: 0.2rem;
-            letter-spacing: -0.02em;
+            margin-top: 0.2rem;
+            margin-bottom: 0.35rem;
+            letter-spacing: -0.03em;
+            line-height: 1.1;
         }
 
         .subtitle {
-            color: #9ca3af;
-            font-size: 1rem;
-            margin-bottom: 0.8rem;
+            color: #cbd5e1;
+            font-size: 1.08rem;
+            margin-bottom: 0.95rem;
+            line-height: 1.5;
         }
 
         .market-chip {
             display: inline-block;
-            padding: 0.35rem 0.7rem;
+            padding: 0.38rem 0.78rem;
             margin-right: 0.45rem;
             margin-bottom: 0.4rem;
             border-radius: 999px;
-            background: rgba(255,255,255,0.06);
-            border: 1px solid rgba(255,255,255,0.08);
-            color: #d1d5db;
-            font-size: 0.88rem;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.10);
+            color: #e5e7eb;
+            font-size: 0.90rem;
         }
 
         .section-card {
-            background: rgba(17, 24, 39, 0.82);
+            background: rgba(12, 19, 34, 0.88);
             border: 1px solid rgba(255,255,255,0.08);
             border-radius: 18px;
-            padding: 1rem 1.1rem;
+            padding: 1.15rem 1.2rem;
             margin-bottom: 1rem;
-            box-shadow: 0 6px 22px rgba(0,0,0,0.22);
-            backdrop-filter: blur(6px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.22);
         }
 
         .small-note {
-            color: #9ca3af;
-            font-size: 0.92rem;
-            line-height: 1.45;
+            color: #d1d5db;
+            font-size: 0.95rem;
+            line-height: 1.5;
         }
 
         .report-box {
-            background: rgba(3, 7, 18, 0.70);
-            border: 1px solid rgba(34, 197, 94, 0.18);
-            border-radius: 14px;
-            padding: 1rem 1.1rem;
-            color: #e5e7eb;
-            line-height: 1.6;
+            background: rgba(10, 16, 28, 0.95);
+            border: 1px solid rgba(34, 197, 94, 0.22);
+            border-radius: 16px;
+            padding: 1.15rem 1.2rem;
+            color: #f8fafc;
+            line-height: 1.7;
+            font-size: 1rem;
         }
 
         div[data-testid="metric-container"] {
-            background: rgba(3, 7, 18, 0.72);
+            background: rgba(4, 10, 20, 0.82);
             border: 1px solid rgba(255,255,255,0.08);
-            padding: 0.9rem 1rem;
+            padding: 1rem 1rem;
             border-radius: 14px;
             box-shadow: inset 0 1px 0 rgba(255,255,255,0.03);
         }
 
         div[data-testid="metric-container"] label {
-            color: #9ca3af !important;
+            color: #cbd5e1 !important;
+            opacity: 1 !important;
         }
 
         div[data-testid="metric-container"] [data-testid="stMetricValue"] {
-            color: #f9fafb;
+            color: #ffffff !important;
+            opacity: 1 !important;
+        }
+
+        div[data-testid="metric-container"] [data-testid="stMetricDelta"] {
+            color: #e5e7eb !important;
+            opacity: 1 !important;
         }
 
         h1, h2, h3, h4, h5, h6, p, label, span, div {
@@ -248,29 +260,37 @@ def detectar_mayor_riesgo(df_comp: pd.DataFrame, nivel_confianza: float) -> str:
 
 def layout_mercado(titulo: str, alto: int = 400) -> dict:
     return dict(
-        title=titulo,
+        title=dict(
+            text=titulo,
+            font=dict(size=22, color="#f8fafc")
+        ),
         height=alto,
         template="plotly_dark",
         paper_bgcolor="rgba(0,0,0,0)",
-        plot_bgcolor="#0b1220",
-        font=dict(color="#e5e7eb"),
-        margin=dict(l=20, r=20, t=55, b=20),
+        plot_bgcolor="#0a1222",
+        font=dict(color="#f8fafc", size=14),
+        margin=dict(l=20, r=20, t=65, b=20),
         xaxis=dict(
             showgrid=True,
             gridcolor="rgba(255,255,255,0.08)",
-            zeroline=False
+            zeroline=False,
+            title_font=dict(color="#e5e7eb"),
+            tickfont=dict(color="#e5e7eb")
         ),
         yaxis=dict(
             showgrid=True,
             gridcolor="rgba(255,255,255,0.08)",
-            zeroline=False
+            zeroline=False,
+            title_font=dict(color="#e5e7eb"),
+            tickfont=dict(color="#e5e7eb")
         ),
         legend=dict(
             orientation="h",
             yanchor="bottom",
             y=1.02,
             xanchor="right",
-            x=1
+            x=1,
+            font=dict(color="#f8fafc")
         )
     )
 
@@ -278,9 +298,14 @@ def layout_mercado(titulo: str, alto: int = 400) -> dict:
 # ============================================================
 # ENCABEZADO
 # ============================================================
-st.markdown('<div class="main-title">Valoración de Riesgos Financieros</div>', unsafe_allow_html=True)
 st.markdown(
-    '<div class="subtitle">Dashboard interactivo con enfoque de mercado para evaluar volatilidad, VaR, drawdown y desempeño ajustado por riesgo.</div>',
+    """
+    <div class="main-title">Valoración de Riesgos Financieros</div>
+    <div class="subtitle">
+        Dashboard interactivo con enfoque de mercado para evaluar volatilidad, VaR, drawdown
+        y desempeño ajustado por riesgo.
+    </div>
+    """,
     unsafe_allow_html=True
 )
 
@@ -331,9 +356,7 @@ umbral_var = st.sidebar.slider(
 ) / 100
 
 st.sidebar.markdown("---")
-st.sidebar.info(
-    "Estilo visual tipo mercado. Los cálculos usan datos históricos descargados desde Yahoo Finance."
-)
+st.sidebar.caption("Datos históricos obtenidos desde Yahoo Finance.")
 
 
 # ============================================================
@@ -460,7 +483,8 @@ with col_der:
 st.markdown(
     """
     <div class="small-note">
-    Esta sección sí cumple la instrucción de comparar visualmente el comportamiento de precios frente a la frecuencia de los retornos.
+    Esta sección compara visualmente el comportamiento del precio frente a la frecuencia
+    de sus retornos, tal como solicita la actividad.
     </div>
     """,
     unsafe_allow_html=True
@@ -475,7 +499,6 @@ st.markdown('<div class="section-card">', unsafe_allow_html=True)
 st.subheader("Distribución de retornos diarios")
 
 fig_hist = go.Figure()
-
 fig_hist.add_trace(go.Histogram(
     x=retornos,
     nbinsx=60,
@@ -530,7 +553,7 @@ t3.metric("Percentil 95%", f"{q95 * 100:.2f}%")
 t4.metric("Percentil 99%", f"{q99 * 100:.2f}%")
 
 st.caption(
-    "El histograma cumple la instrucción del curso: muestra la distribución de retornos diarios, marca claramente la línea del VaR en rojo y destaca la cola izquierda."
+    "El histograma muestra la distribución de retornos diarios, marca claramente la línea del VaR en rojo y destaca la cola izquierda."
 )
 st.markdown("</div>", unsafe_allow_html=True)
 
@@ -639,21 +662,32 @@ if not df_comp.empty:
     fila_riesgo = df_comp[df_comp["Activo"] == activo_mas_riesgoso].iloc[0]
     fila_estable = df_comp.sort_values("Volatilidad anual (%)", ascending=True).iloc[0]
 
-    reporte = f"""
-    En el periodo seleccionado de {anios} año(s), el análisis confirma diferencias importantes entre los tres activos.
-    **{activo_mas_vol}** presenta la mayor volatilidad anualizada, mientras que **{activo_peor_var}** muestra el VaR más severo
-    bajo el nivel de confianza elegido. A su vez, **{activo_peor_dd}** registra el drawdown más profundo.
+    reporte_html = f"""
+    <div class="report-box">
+        <p>
+            En el periodo seleccionado de <b>{anios} año(s)</b>, el análisis confirma diferencias importantes entre los tres activos.
+            <b>{activo_mas_vol}</b> presenta la mayor volatilidad anualizada, mientras que <b>{activo_peor_var}</b> muestra
+            el VaR más severo bajo el nivel de confianza elegido. A su vez, <b>{activo_peor_dd}</b> registra el drawdown más profundo.
+        </p>
 
-    Considerando de forma conjunta volatilidad, VaR y máximo drawdown, el activo con **mayor riesgo** en esta ejecución es **{activo_mas_riesgoso}**.
-    Este activo presenta una volatilidad anual de **{fila_riesgo['Volatilidad anual (%)']:.2f}%**, un
-    VaR {int(nivel_confianza * 100)}% de **{fila_riesgo[var_col]:.2f}%** y un drawdown máximo de **{fila_riesgo['Máx. Drawdown (%)']:.2f}%**.
+        <p>
+            Considerando de forma conjunta la volatilidad, el VaR y el máximo drawdown, el activo con <b>mayor riesgo</b>
+            en esta ejecución es <b>{activo_mas_riesgoso}</b>. Este activo presenta una volatilidad anual de
+            <b>{fila_riesgo['Volatilidad anual (%)']:.2f}%</b>, un VaR {int(nivel_confianza * 100)}% de
+            <b>{fila_riesgo[var_col]:.2f}%</b> y un drawdown máximo de
+            <b>{fila_riesgo['Máx. Drawdown (%)']:.2f}%</b>.
+        </p>
 
-    Por otra parte, el activo relativamente más estable fue **{fila_estable['Activo']}**, con una volatilidad anual de
-    **{fila_estable['Volatilidad anual (%)']:.2f}%**. En términos de retorno ajustado por riesgo,
-    el mejor ratio de Sharpe corresponde a **{activo_mejor_sharpe}**.
+        <p>
+            Por otra parte, el activo relativamente más estable fue <b>{fila_estable['Activo']}</b>,
+            con una volatilidad anual de <b>{fila_estable['Volatilidad anual (%)']:.2f}%</b>.
+            En términos de retorno ajustado por riesgo, el mejor ratio de Sharpe corresponde a
+            <b>{activo_mejor_sharpe}</b>.
+        </p>
+    </div>
     """
 
-    st.markdown(f'<div class="report-box">{reporte}</div>', unsafe_allow_html=True)
+    st.markdown(reporte_html, unsafe_allow_html=True)
 else:
     st.info("No fue posible generar el reporte comparativo.")
 
