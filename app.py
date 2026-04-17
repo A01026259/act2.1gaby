@@ -23,14 +23,15 @@ st.set_page_config(
 )
 
 # ============================================================
-# ESTILOS
+# ESTILOS GLOBALES (FORZAR BLANCO EN TODO EL TEXTO)
 # ============================================================
 st.markdown(
     """
     <style>
+        /* Fondo general */
         .stApp {
             background: linear-gradient(180deg, #050b16 0%, #0b1220 100%);
-            color: #f8fafc;
+            color: #ffffff !important;
         }
 
         .block-container {
@@ -41,15 +42,50 @@ st.markdown(
             max-width: 1400px;
         }
 
+        /* Sidebar */
         section[data-testid="stSidebar"] {
-            background: #060d18;
+            background: #060d18 !important;
             border-right: 1px solid rgba(255,255,255,0.08);
         }
 
+        section[data-testid="stSidebar"] * {
+            color: #ffffff !important;
+        }
+
+        section[data-testid="stSidebar"] label {
+            color: #ffffff !important;
+            opacity: 1 !important;
+        }
+
+        section[data-testid="stSidebar"] p,
+        section[data-testid="stSidebar"] span,
+        section[data-testid="stSidebar"] div,
+        section[data-testid="stSidebar"] h1,
+        section[data-testid="stSidebar"] h2,
+        section[data-testid="stSidebar"] h3 {
+            color: #ffffff !important;
+            opacity: 1 !important;
+        }
+
+        /* Texto general */
+        html, body, [class*="css"] {
+            color: #ffffff !important;
+        }
+
+        p, span, div, label, small, li {
+            color: #ffffff !important;
+            opacity: 1 !important;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            color: #ffffff !important;
+        }
+
+        /* Título principal */
         .main-title {
             font-size: 2.9rem;
             font-weight: 800;
-            color: #f9fafb;
+            color: #ffffff !important;
             margin-top: 0.3rem;
             margin-bottom: 0.35rem;
             letter-spacing: -0.03em;
@@ -57,7 +93,7 @@ st.markdown(
         }
 
         .subtitle {
-            color: #d1d5db;
+            color: #f8fafc !important;
             font-size: 1.08rem;
             margin-bottom: 0.95rem;
             line-height: 1.5;
@@ -71,12 +107,13 @@ st.markdown(
             border-radius: 999px;
             background: rgba(255,255,255,0.05);
             border: 1px solid rgba(255,255,255,0.10);
-            color: #e5e7eb;
+            color: #ffffff !important;
             font-size: 0.90rem;
         }
 
+        /* Subtítulos y texto auxiliar */
         .small-note {
-            color: #d1d5db;
+            color: #ffffff !important;
             font-size: 0.95rem;
             line-height: 1.5;
         }
@@ -86,11 +123,16 @@ st.markdown(
             border: 1px solid rgba(34, 197, 94, 0.22);
             border-radius: 16px;
             padding: 1.15rem 1.2rem;
-            color: #f8fafc;
+            color: #ffffff !important;
             line-height: 1.75;
             font-size: 1rem;
         }
 
+        .report-box p, .report-box b, .report-box span, .report-box div {
+            color: #ffffff !important;
+        }
+
+        /* Métricas */
         div[data-testid="metric-container"] {
             background: rgba(4, 10, 20, 0.82);
             border: 1px solid rgba(255,255,255,0.08);
@@ -99,8 +141,18 @@ st.markdown(
             box-shadow: inset 0 1px 0 rgba(255,255,255,0.03);
         }
 
+        div[data-testid="metric-container"] * {
+            color: #ffffff !important;
+            opacity: 1 !important;
+        }
+
         div[data-testid="metric-container"] label {
-            color: #cbd5e1 !important;
+            color: #ffffff !important;
+            opacity: 1 !important;
+        }
+
+        div[data-testid="metric-container"] [data-testid="stMetricLabel"] {
+            color: #ffffff !important;
             opacity: 1 !important;
         }
 
@@ -110,19 +162,51 @@ st.markdown(
         }
 
         div[data-testid="metric-container"] [data-testid="stMetricDelta"] {
-            color: #e5e7eb !important;
+            color: #ffffff !important;
             opacity: 1 !important;
         }
 
+        /* Selectbox / inputs / radio / sliders */
+        div[data-baseweb="select"] * {
+            color: #111827 !important;   /* dentro del recuadro blanco */
+        }
+
+        div[data-baseweb="input"] input {
+            color: #111827 !important;   /* dentro del input blanco */
+        }
+
+        div[data-testid="stNumberInput"] input {
+            color: #111827 !important;
+        }
+
+        div[data-testid="stRadio"] label {
+            color: #ffffff !important;
+            opacity: 1 !important;
+        }
+
+        div[data-testid="stSlider"] label {
+            color: #ffffff !important;
+            opacity: 1 !important;
+        }
+
+        /* Caption y markdown */
+        .stCaption, .stCaption * {
+            color: #ffffff !important;
+            opacity: 0.95 !important;
+        }
+
+        [data-testid="stMarkdownContainer"] * {
+            color: #ffffff !important;
+            opacity: 1 !important;
+        }
+
+        /* Dataframe */
         [data-testid="stDataFrame"] {
             border-radius: 14px;
             overflow: hidden;
         }
 
-        h1, h2, h3, h4, h5, h6, p, label, span, div {
-            color: inherit;
-        }
-
+        /* Líneas */
         hr {
             border-color: rgba(255,255,255,0.08);
         }
@@ -260,27 +344,27 @@ def layout_mercado(titulo: str, alto: int = 400) -> dict:
     return dict(
         title=dict(
             text=titulo,
-            font=dict(size=22, color="#f8fafc")
+            font=dict(size=22, color="#ffffff")
         ),
         height=alto,
         template="plotly_dark",
         paper_bgcolor="rgba(0,0,0,0)",
         plot_bgcolor="#0a1222",
-        font=dict(color="#f8fafc", size=14),
+        font=dict(color="#ffffff", size=14),
         margin=dict(l=20, r=20, t=70, b=20),
         xaxis=dict(
             showgrid=True,
             gridcolor="rgba(255,255,255,0.08)",
             zeroline=False,
-            title_font=dict(color="#e5e7eb"),
-            tickfont=dict(color="#e5e7eb")
+            title_font=dict(color="#ffffff"),
+            tickfont=dict(color="#ffffff")
         ),
         yaxis=dict(
             showgrid=True,
             gridcolor="rgba(255,255,255,0.08)",
             zeroline=False,
-            title_font=dict(color="#e5e7eb"),
-            tickfont=dict(color="#e5e7eb")
+            title_font=dict(color="#ffffff"),
+            tickfont=dict(color="#ffffff")
         ),
         legend=dict(
             orientation="h",
@@ -288,7 +372,7 @@ def layout_mercado(titulo: str, alto: int = 400) -> dict:
             y=1.02,
             xanchor="right",
             x=1,
-            font=dict(color="#f8fafc")
+            font=dict(color="#ffffff")
         )
     )
 
