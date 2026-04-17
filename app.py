@@ -62,13 +62,13 @@ def obtener_historicos(ticker, anios):
 
 
 # ---------- Encabezado ----------
-st.title("💹 Valoración de Riesgos Financieros")
+st.title(" Valoración de Riesgos Financieros")
 st.write("**Alumna:** Alejandra Martínez Cuen  |  **Activos analizados:** PFE · SHIB-USD · CL=F")
 st.divider()
 
 
 # ---------- Sidebar con parámetros ----------
-st.sidebar.title("⚙️ Parámetros")
+st.sidebar.title(" Parámetros")
 
 activo_seleccionado = st.sidebar.selectbox("Activo:", list(ACTIVOS.keys()))
 ticker = ACTIVOS[activo_seleccionado]
@@ -149,7 +149,7 @@ else:
 # ============================================================
 # SECCIÓN 2: INDICADORES CLAVE
 # ============================================================
-st.subheader("📌 Indicadores de riesgo")
+st.subheader(" Indicadores de riesgo")
 
 m1, m2, m3, m4 = st.columns(4)
 m1.metric("Volatilidad Anual", f"{vol_anual*100:.2f}%")
@@ -199,7 +199,7 @@ st.divider()
 # ============================================================
 # SECCIÓN 4: COMPARATIVA PRECIOS vs RETORNOS
 # ============================================================
-st.subheader("🔀 Precios históricos y frecuencia de retornos")
+st.subheader(" Precios históricos y frecuencia de retornos")
 
 col_izq, col_der = st.columns(2)
 
@@ -241,7 +241,7 @@ st.divider()
 # ============================================================
 # SECCIÓN 5: REPORTE COMPARATIVO DE LOS 3 ACTIVOS
 # ============================================================
-st.subheader("📝 Análisis comparativo de los 3 activos")
+st.subheader(" Análisis comparativo de los 3 activos")
 
 @st.cache_data(ttl=3600)
 def metricas_activo(ticker, anios):
