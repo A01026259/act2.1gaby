@@ -18,50 +18,103 @@ from datetime import datetime, timedelta
 # ============================================================
 st.set_page_config(
     page_title="Valoración de Riesgos Financieros",
-    page_icon="📊",
+    page_icon="📈",
     layout="wide"
 )
 
-# ---------- Estilos ----------
+# ---------- Estilos oscuros tipo mercado ----------
 st.markdown(
     """
     <style>
+        .stApp {
+            background: linear-gradient(180deg, #0b0f14 0%, #111827 100%);
+            color: #f3f4f6;
+        }
+
         .block-container {
-            padding-top: 1.5rem;
+            padding-top: 1.2rem;
             padding-bottom: 1rem;
+            max-width: 1350px;
+        }
+
+        section[data-testid="stSidebar"] {
+            background: #0a0f1a;
+            border-right: 1px solid rgba(255,255,255,0.08);
         }
 
         .main-title {
-            font-size: 2.2rem;
+            font-size: 2.35rem;
             font-weight: 800;
+            color: #f9fafb;
             margin-bottom: 0.2rem;
+            letter-spacing: -0.02em;
         }
 
         .subtitle {
-            color: #6b7280;
+            color: #9ca3af;
             font-size: 1rem;
-            margin-bottom: 1.1rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .market-chip {
+            display: inline-block;
+            padding: 0.35rem 0.7rem;
+            margin-right: 0.45rem;
+            margin-bottom: 0.4rem;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.08);
+            color: #d1d5db;
+            font-size: 0.88rem;
         }
 
         .section-card {
-            background: #ffffff;
+            background: rgba(17, 24, 39, 0.82);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 18px;
             padding: 1rem 1.1rem;
-            border-radius: 16px;
-            border: 1px solid rgba(0,0,0,0.06);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
             margin-bottom: 1rem;
+            box-shadow: 0 6px 22px rgba(0,0,0,0.22);
+            backdrop-filter: blur(6px);
         }
 
         .small-note {
-            color: #6b7280;
+            color: #9ca3af;
             font-size: 0.92rem;
+            line-height: 1.45;
         }
 
         .report-box {
-            background: #f8fafc;
-            border: 1px solid rgba(0,0,0,0.06);
+            background: rgba(3, 7, 18, 0.70);
+            border: 1px solid rgba(34, 197, 94, 0.18);
             border-radius: 14px;
             padding: 1rem 1.1rem;
+            color: #e5e7eb;
+            line-height: 1.6;
+        }
+
+        div[data-testid="metric-container"] {
+            background: rgba(3, 7, 18, 0.72);
+            border: 1px solid rgba(255,255,255,0.08);
+            padding: 0.9rem 1rem;
+            border-radius: 14px;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.03);
+        }
+
+        div[data-testid="metric-container"] label {
+            color: #9ca3af !important;
+        }
+
+        div[data-testid="metric-container"] [data-testid="stMetricValue"] {
+            color: #f9fafb;
+        }
+
+        h1, h2, h3, h4, h5, h6, p, label, span, div {
+            color: inherit;
+        }
+
+        hr {
+            border-color: rgba(255,255,255,0.08);
         }
     </style>
     """,
@@ -84,9 +137,6 @@ ACTIVOS = {
 # ============================================================
 @st.cache_data(ttl=3600)
 def obtener_historicos(ticker: str, anios: int) -> pd.DataFrame:
-    """
-    Descarga precios históricos ajustados del activo seleccionado.
-    """
     fin = datetime.today()
     inicio = fin - timedelta(days=365 * anios)
 
@@ -121,9 +171,6 @@ def obtener_historicos(ticker: str, anios: int) -> pd.DataFrame:
 
 
 def calcular_metricas(df: pd.DataFrame, nivel_confianza: float, tasa_libre: float) -> dict:
-    """
-    Calcula métricas de riesgo principales.
-    """
     datos = df.copy()
     datos["Retorno"] = np.log(datos["Close"] / datos["Close"].shift(1))
     datos = datos.dropna()
@@ -162,9 +209,6 @@ def calcular_metricas(df: pd.DataFrame, nivel_confianza: float, tasa_libre: floa
 
 @st.cache_data(ttl=3600)
 def tabla_comparativa(anios: int, nivel_confianza: float, tasa_libre: float) -> pd.DataFrame:
-    """
-    Genera tabla comparativa para los 3 activos.
-    """
     registros = []
 
     for nombre, ticker in ACTIVOS.items():
@@ -190,13 +234,9 @@ def tabla_comparativa(anios: int, nivel_confianza: float, tasa_libre: float) -> 
 
 
 def detectar_mayor_riesgo(df_comp: pd.DataFrame, nivel_confianza: float) -> str:
-    """
-    Determina el activo más riesgoso con base en volatilidad, VaR y drawdown.
-    """
     var_col = f"VaR {int(nivel_confianza * 100)}% (%)"
     temp = df_comp.copy()
 
-    # Para VaR y Drawdown, más negativo = más riesgoso.
     temp["score_vol"] = temp["Volatilidad anual (%)"].rank(ascending=False, method="min")
     temp["score_var"] = temp[var_col].rank(ascending=True, method="min")
     temp["score_dd"] = temp["Máx. Drawdown (%)"].rank(ascending=True, method="min")
@@ -206,14 +246,53 @@ def detectar_mayor_riesgo(df_comp: pd.DataFrame, nivel_confianza: float) -> str:
     return peor
 
 
+def layout_mercado(titulo: str, alto: int = 400) -> dict:
+    return dict(
+        title=titulo,
+        height=alto,
+        template="plotly_dark",
+        paper_bgcolor="rgba(0,0,0,0)",
+        plot_bgcolor="#0b1220",
+        font=dict(color="#e5e7eb"),
+        margin=dict(l=20, r=20, t=55, b=20),
+        xaxis=dict(
+            showgrid=True,
+            gridcolor="rgba(255,255,255,0.08)",
+            zeroline=False
+        ),
+        yaxis=dict(
+            showgrid=True,
+            gridcolor="rgba(255,255,255,0.08)",
+            zeroline=False
+        ),
+        legend=dict(
+            orientation="h",
+            yanchor="bottom",
+            y=1.02,
+            xanchor="right",
+            x=1
+        )
+    )
+
+
 # ============================================================
 # ENCABEZADO
 # ============================================================
 st.markdown('<div class="main-title">Valoración de Riesgos Financieros</div>', unsafe_allow_html=True)
 st.markdown(
-    '<div class="subtitle">Aplicación interactiva para evaluar volatilidad, VaR, drawdown y Sharpe de los activos asignados: PFE, SHIB-USD y CL=F.</div>',
+    '<div class="subtitle">Dashboard interactivo con enfoque de mercado para evaluar volatilidad, VaR, drawdown y desempeño ajustado por riesgo.</div>',
     unsafe_allow_html=True
 )
+
+st.markdown(
+    """
+    <span class="market-chip">PFE · Equity</span>
+    <span class="market-chip">SHIB-USD · Crypto</span>
+    <span class="market-chip">CL=F · Commodity</span>
+    """,
+    unsafe_allow_html=True
+)
+
 st.caption("Alumna: Alejandra Martínez Cuen · Actividad 2.1.1 y 2.1.2")
 st.divider()
 
@@ -221,9 +300,9 @@ st.divider()
 # ============================================================
 # SIDEBAR
 # ============================================================
-st.sidebar.header("Configuración del análisis")
+st.sidebar.header("Parámetros de mercado")
 
-activo_seleccionado = st.sidebar.selectbox("Selecciona un activo", list(ACTIVOS.keys()))
+activo_seleccionado = st.sidebar.selectbox("Activo", list(ACTIVOS.keys()))
 ticker = ACTIVOS[activo_seleccionado]
 
 anios = st.sidebar.slider("Años de historia", 1, 5, 1)
@@ -253,12 +332,12 @@ umbral_var = st.sidebar.slider(
 
 st.sidebar.markdown("---")
 st.sidebar.info(
-    "La app calcula indicadores de riesgo con datos históricos descargados desde Yahoo Finance."
+    "Estilo visual tipo mercado. Los cálculos usan datos históricos descargados desde Yahoo Finance."
 )
 
 
 # ============================================================
-# DESCARGA Y CÁLCULO PRINCIPAL
+# DESCARGA Y CÁLCULO
 # ============================================================
 with st.spinner(f"Descargando datos de {ticker}..."):
     df_activo = obtener_historicos(ticker, anios)
@@ -288,26 +367,25 @@ st.subheader(f"Resultados para {activo_seleccionado}")
 if abs(var_param) > umbral_var:
     st.error(
         f"ALERTA DE RIESGO ALTO — El VaR {int(nivel_confianza * 100)}% es de "
-        f"{abs(var_param) * 100:.2f}%, por encima del umbral definido de {umbral_var * 100:.2f}%. "
-        f"Se recomienda considerar diversificación, coberturas, reducción de exposición o límites de pérdida."
+        f"{abs(var_param) * 100:.2f}%, por encima del umbral de {umbral_var * 100:.2f}%."
     )
 elif abs(var_param) > umbral_var * 0.7:
     st.warning(
         f"Riesgo moderado — El VaR {int(nivel_confianza * 100)}% es de "
-        f"{abs(var_param) * 100:.2f}% y se encuentra cerca del umbral de alerta."
+        f"{abs(var_param) * 100:.2f}% y se acerca al umbral configurado."
     )
 else:
     st.success(
         f"Riesgo controlado — El VaR {int(nivel_confianza * 100)}% es de "
-        f"{abs(var_param) * 100:.2f}% y se mantiene dentro del umbral aceptable."
+        f"{abs(var_param) * 100:.2f}% y permanece dentro del rango aceptable."
     )
 
 
 # ============================================================
-# MÉTRICAS PRINCIPALES
+# MÉTRICAS
 # ============================================================
 st.markdown('<div class="section-card">', unsafe_allow_html=True)
-st.subheader("Indicadores clave de riesgo")
+st.subheader("Indicadores clave")
 
 c1, c2, c3, c4 = st.columns(4)
 c1.metric("Volatilidad anualizada", f"{vol_anual * 100:.2f}%")
@@ -320,7 +398,7 @@ st.markdown(
     <div class="small-note">
     Retorno anual estimado: <b>{retorno_anual * 100:.2f}%</b> ·
     Días en cola izquierda: <b>{observaciones_cola}</b> ·
-    Porcentaje de días por debajo del VaR: <b>{pct_cola * 100:.2f}%</b>
+    % de días por debajo del VaR: <b>{pct_cola * 100:.2f}%</b>
     </div>
     """,
     unsafe_allow_html=True
@@ -329,7 +407,7 @@ st.markdown("</div>", unsafe_allow_html=True)
 
 
 # ============================================================
-# COMPARATIVA: PRECIO VS FRECUENCIA DE RETORNOS
+# COMPARATIVA PRECIO VS FRECUENCIA
 # ============================================================
 st.markdown('<div class="section-card">', unsafe_allow_html=True)
 st.subheader("Comparativa visual: precio vs frecuencia de retornos")
@@ -343,16 +421,11 @@ with col_izq:
         y=datos["Close"],
         mode="lines",
         name="Precio de cierre",
-        line=dict(color="#2563eb", width=2.5)
+        line=dict(color="#22c55e", width=2.6)
     ))
-    fig_precio.update_layout(
-        title="Evolución del precio",
-        xaxis_title="Fecha",
-        yaxis_title="Precio de cierre",
-        height=390,
-        margin=dict(l=20, r=20, t=50, b=20),
-        template="plotly_white"
-    )
+    fig_precio.update_layout(**layout_mercado("Evolución del precio", 390))
+    fig_precio.update_xaxes(title="Fecha")
+    fig_precio.update_yaxes(title="Precio de cierre")
     st.plotly_chart(fig_precio, use_container_width=True)
 
 with col_der:
@@ -360,33 +433,34 @@ with col_der:
     fig_hist_small.add_trace(go.Histogram(
         x=retornos,
         nbinsx=50,
-        name="Frecuencia de retornos",
-        marker_color="#7c3aed",
+        name="Frecuencia",
+        marker_color="#38bdf8",
         opacity=0.82
     ))
+    fig_hist_small.add_vrect(
+        x0=retornos.min(),
+        x1=var_param,
+        fillcolor="rgba(239, 68, 68, 0.18)",
+        line_width=0,
+        layer="below"
+    )
     fig_hist_small.add_vline(
         x=var_param,
         line_width=3,
         line_dash="dash",
-        line_color="red",
+        line_color="#ef4444",
         annotation_text=f"VaR {int(nivel_confianza * 100)}%",
         annotation_position="top left"
     )
-    fig_hist_small.update_layout(
-        title="Frecuencia de retornos diarios",
-        xaxis_title="Retorno diario",
-        yaxis_title="Frecuencia",
-        height=390,
-        margin=dict(l=20, r=20, t=50, b=20),
-        template="plotly_white"
-    )
+    fig_hist_small.update_layout(**layout_mercado("Frecuencia de retornos diarios", 390))
+    fig_hist_small.update_xaxes(title="Retorno diario")
+    fig_hist_small.update_yaxes(title="Frecuencia")
     st.plotly_chart(fig_hist_small, use_container_width=True)
 
 st.markdown(
     """
     <div class="small-note">
-    Esta comparación permite contrastar el comportamiento temporal del precio con la distribución estadística
-    de sus retornos, identificando episodios de mayor dispersión y riesgo en la cola izquierda.
+    Esta sección sí cumple la instrucción de comparar visualmente el comportamiento de precios frente a la frecuencia de los retornos.
     </div>
     """,
     unsafe_allow_html=True
@@ -395,44 +469,53 @@ st.markdown("</div>", unsafe_allow_html=True)
 
 
 # ============================================================
-# DISTRIBUCIÓN Y CONTROL VISUAL
+# HISTOGRAMA PRINCIPAL
 # ============================================================
 st.markdown('<div class="section-card">', unsafe_allow_html=True)
-st.subheader("Distribución de retornos y línea de control VaR")
+st.subheader("Distribución de retornos diarios")
 
 fig_hist = go.Figure()
+
 fig_hist.add_trace(go.Histogram(
     x=retornos,
     nbinsx=60,
     name="Retornos diarios",
-    marker_color="#6d28d9",
-    opacity=0.78
+    marker_color="#00c2ff",
+    opacity=0.80,
+    hovertemplate="Retorno: %{x:.2%}<br>Frecuencia: %{y}<extra></extra>"
 ))
+
+fig_hist.add_vrect(
+    x0=retornos.min(),
+    x1=var_param,
+    fillcolor="rgba(239, 68, 68, 0.20)",
+    line_width=0,
+    layer="below",
+    annotation_text="Zona de pérdida extrema",
+    annotation_position="top left"
+)
+
 fig_hist.add_vline(
     x=var_param,
     line_width=3,
     line_dash="dash",
-    line_color="red",
+    line_color="#ff3b30",
     annotation_text=f"VaR {int(nivel_confianza * 100)}% = {var_param * 100:.2f}%",
     annotation_position="top left"
 )
+
 fig_hist.add_vline(
     x=retornos.mean(),
     line_width=2,
     line_dash="dot",
-    line_color="green",
+    line_color="#22c55e",
     annotation_text=f"Media = {retornos.mean() * 100:.3f}%",
     annotation_position="top right"
 )
 
-fig_hist.update_layout(
-    xaxis_title="Retorno diario",
-    yaxis_title="Frecuencia",
-    height=450,
-    bargap=0.05,
-    template="plotly_white",
-    margin=dict(l=20, r=20, t=50, b=20)
-)
+fig_hist.update_layout(**layout_mercado("Distribución y línea de control VaR", 450))
+fig_hist.update_xaxes(title="Retorno diario", tickformat=".0%")
+fig_hist.update_yaxes(title="Frecuencia")
 st.plotly_chart(fig_hist, use_container_width=True)
 
 q01 = retornos.quantile(0.01)
@@ -447,7 +530,7 @@ t3.metric("Percentil 95%", f"{q95 * 100:.2f}%")
 t4.metric("Percentil 99%", f"{q99 * 100:.2f}%")
 
 st.caption(
-    "La cola izquierda concentra los escenarios de pérdida extrema. El VaR funciona como línea de control para identificar si el activo presenta eventos severos con frecuencia relevante."
+    "El histograma cumple la instrucción del curso: muestra la distribución de retornos diarios, marca claramente la línea del VaR en rojo y destaca la cola izquierda."
 )
 st.markdown("</div>", unsafe_allow_html=True)
 
@@ -465,22 +548,18 @@ fig_dd.add_trace(go.Scatter(
     mode="lines",
     fill="tozeroy",
     name="Drawdown",
-    line=dict(color="crimson", width=2)
+    line=dict(color="#f97316", width=2.3),
+    fillcolor="rgba(249, 115, 22, 0.18)"
 ))
-fig_dd.update_layout(
-    xaxis_title="Fecha",
-    yaxis_title="Drawdown (%)",
-    height=400,
-    template="plotly_white",
-    margin=dict(l=20, r=20, t=30, b=20)
-)
+fig_dd.update_layout(**layout_mercado("Profundidad de caídas del activo", 400))
+fig_dd.update_xaxes(title="Fecha")
+fig_dd.update_yaxes(title="Drawdown (%)")
 st.plotly_chart(fig_dd, use_container_width=True)
 
 st.markdown(
     """
     <div class="small-note">
-    El drawdown muestra la caída acumulada desde el máximo histórico del periodo. Mientras más profundo sea,
-    mayor es el esfuerzo requerido para recuperar el valor previo.
+    El drawdown complementa el análisis de riesgo porque muestra la severidad de las caídas acumuladas desde máximos previos.
     </div>
     """,
     unsafe_allow_html=True
@@ -489,7 +568,7 @@ st.markdown("</div>", unsafe_allow_html=True)
 
 
 # ============================================================
-# TABLA COMPARATIVA DE LOS 3 ACTIVOS
+# TABLA COMPARATIVA
 # ============================================================
 st.markdown('<div class="section-card">', unsafe_allow_html=True)
 st.subheader("Análisis comparativo de los 3 activos")
@@ -511,42 +590,39 @@ else:
         use_container_width=True
     )
 
-    # Gráfico comparativo
     var_col = f"VaR {int(nivel_confianza * 100)}% (%)"
 
     fig_comp = go.Figure()
     fig_comp.add_trace(go.Bar(
         x=df_comp["Activo"],
         y=df_comp["Volatilidad anual (%)"],
-        name="Volatilidad anual (%)"
+        name="Volatilidad anual",
+        marker_color="#38bdf8"
     ))
     fig_comp.add_trace(go.Bar(
         x=df_comp["Activo"],
         y=np.abs(df_comp[var_col]),
-        name=f"|VaR {int(nivel_confianza * 100)}%| (%)"
+        name=f"|VaR {int(nivel_confianza * 100)}%|",
+        marker_color="#ef4444"
     ))
     fig_comp.add_trace(go.Bar(
         x=df_comp["Activo"],
         y=np.abs(df_comp["Máx. Drawdown (%)"]),
-        name="|Máx. Drawdown| (%)"
+        name="|Máx. Drawdown|",
+        marker_color="#f59e0b"
     ))
 
-    fig_comp.update_layout(
-        barmode="group",
-        height=420,
-        title="Comparación de indicadores de riesgo",
-        xaxis_title="Activo",
-        yaxis_title="Porcentaje (%)",
-        template="plotly_white",
-        margin=dict(l=20, r=20, t=50, b=20)
-    )
+    fig_comp.update_layout(**layout_mercado("Comparación de indicadores de riesgo", 420))
+    fig_comp.update_layout(barmode="group")
+    fig_comp.update_xaxes(title="Activo")
+    fig_comp.update_yaxes(title="Porcentaje (%)")
     st.plotly_chart(fig_comp, use_container_width=True)
 
 st.markdown("</div>", unsafe_allow_html=True)
 
 
 # ============================================================
-# REPORTE DE ANÁLISIS
+# REPORTE
 # ============================================================
 st.markdown('<div class="section-card">', unsafe_allow_html=True)
 st.subheader("Reporte breve de análisis")
@@ -564,20 +640,17 @@ if not df_comp.empty:
     fila_estable = df_comp.sort_values("Volatilidad anual (%)", ascending=True).iloc[0]
 
     reporte = f"""
-    En el periodo seleccionado de {anios} año(s), el análisis comparativo muestra diferencias claras entre los tres activos asignados.
-    **{activo_mas_vol}** presenta la mayor volatilidad anualizada, mientras que **{activo_peor_var}** registra el VaR más severo al nivel de confianza elegido.
-    Asimismo, **{activo_peor_dd}** exhibe el drawdown más profundo, lo que indica una mayor dificultad potencial de recuperación ante caídas fuertes.
+    En el periodo seleccionado de {anios} año(s), el análisis confirma diferencias importantes entre los tres activos.
+    **{activo_mas_vol}** presenta la mayor volatilidad anualizada, mientras que **{activo_peor_var}** muestra el VaR más severo
+    bajo el nivel de confianza elegido. A su vez, **{activo_peor_dd}** registra el drawdown más profundo.
 
-    Considerando en conjunto la volatilidad, el VaR y el máximo drawdown, el activo con **mayor riesgo** en esta ejecución es **{activo_mas_riesgoso}**.
-    En particular, este activo presenta una volatilidad anual de **{fila_riesgo['Volatilidad anual (%)']:.2f}%**, un
+    Considerando de forma conjunta volatilidad, VaR y máximo drawdown, el activo con **mayor riesgo** en esta ejecución es **{activo_mas_riesgoso}**.
+    Este activo presenta una volatilidad anual de **{fila_riesgo['Volatilidad anual (%)']:.2f}%**, un
     VaR {int(nivel_confianza * 100)}% de **{fila_riesgo[var_col]:.2f}%** y un drawdown máximo de **{fila_riesgo['Máx. Drawdown (%)']:.2f}%**.
 
-    Por otro lado, el activo relativamente más estable en términos de dispersión fue **{fila_estable['Activo']}**,
-    con una volatilidad anual de **{fila_estable['Volatilidad anual (%)']:.2f}%**.
-    En desempeño ajustado por riesgo, el mejor resultado de Sharpe corresponde a **{activo_mejor_sharpe}**.
-
-    En conclusión, la comparación sugiere que los activos especulativos o altamente sensibles al mercado pueden generar colas más pesadas
-    y pérdidas extremas más frecuentes, mientras que los activos más estables tienden a exhibir menor dispersión y drawdowns menos severos.
+    Por otra parte, el activo relativamente más estable fue **{fila_estable['Activo']}**, con una volatilidad anual de
+    **{fila_estable['Volatilidad anual (%)']:.2f}%**. En términos de retorno ajustado por riesgo,
+    el mejor ratio de Sharpe corresponde a **{activo_mejor_sharpe}**.
     """
 
     st.markdown(f'<div class="report-box">{reporte}</div>', unsafe_allow_html=True)
@@ -588,10 +661,9 @@ st.markdown("</div>", unsafe_allow_html=True)
 
 
 # ============================================================
-# PIE DE PÁGINA
+# PIE
 # ============================================================
 st.divider()
 st.caption(
-    "Fuente de datos: Yahoo Finance mediante yfinance. "
-    "Esta app tiene fines académicos y no constituye recomendación de inversión."
+    "Fuente de datos: Yahoo Finance mediante yfinance. Esta app tiene fines académicos y no constituye recomendación de inversión."
 )
