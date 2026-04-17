@@ -50,29 +50,13 @@ st.markdown(
             color: #ffffff !important;
         }
 
-        section[data-testid="stSidebar"] label,
-        section[data-testid="stSidebar"] p,
-        section[data-testid="stSidebar"] span,
-        section[data-testid="stSidebar"] div,
-        section[data-testid="stSidebar"] h1,
-        section[data-testid="stSidebar"] h2,
-        section[data-testid="stSidebar"] h3 {
-            color: #ffffff !important;
-            opacity: 1 !important;
-        }
-
         html, body, [class*="css"] {
             color: #ffffff !important;
         }
 
-        p, span, div, label, small, li {
+        p, span, div, label, small, li, h1, h2, h3, h4, h5, h6 {
             color: #ffffff !important;
             opacity: 1 !important;
-        }
-
-        h1, h2, h3, h4, h5, h6 {
-            color: #ffffff !important;
-            margin-top: 0.2rem !important;
         }
 
         .main-title {
@@ -120,10 +104,6 @@ st.markdown(
             font-size: 1rem;
         }
 
-        .report-box p, .report-box b, .report-box span, .report-box div {
-            color: #ffffff !important;
-        }
-
         div[data-testid="metric-container"] {
             background: rgba(4, 10, 20, 0.82);
             border: 1px solid rgba(255,255,255,0.08);
@@ -137,42 +117,49 @@ st.markdown(
             opacity: 1 !important;
         }
 
-        div[data-testid="metric-container"] label,
-        div[data-testid="metric-container"] [data-testid="stMetricLabel"],
-        div[data-testid="metric-container"] [data-testid="stMetricValue"],
-        div[data-testid="metric-container"] [data-testid="stMetricDelta"] {
-            color: #ffffff !important;
-            opacity: 1 !important;
-        }
-
-        /* SELECTBOX: texto negro dentro del recuadro blanco */
+        /* ===== SELECTBOX FIX ===== */
+        /* White box */
         div[data-baseweb="select"] > div {
-            background-color: #ffffff !important;
-            color: #111827 !important;
+            background: #ffffff !important;
+            border-radius: 16px !important;
         }
 
-        div[data-baseweb="select"] span {
+        /* Selected value text */
+        div[data-baseweb="select"] div[class*="singleValue"] {
             color: #111827 !important;
+            -webkit-text-fill-color: #111827 !important;
         }
 
+        /* Search/input text inside select */
+        div[data-baseweb="select"] input {
+            color: #111827 !important;
+            -webkit-text-fill-color: #111827 !important;
+        }
+
+        /* Placeholder text */
+        div[data-baseweb="select"] div[class*="placeholder"] {
+            color: #6b7280 !important;
+        }
+
+        /* Dropdown arrow */
         div[data-baseweb="select"] svg {
             fill: #111827 !important;
             color: #111827 !important;
         }
 
-        /* Opciones desplegables */
+        /* Dropdown menu options */
         div[role="listbox"] * {
             color: #111827 !important;
         }
 
-        /* Number input: texto negro dentro del recuadro blanco */
+        /* Number input text stays dark inside white box */
         div[data-baseweb="input"] input,
         div[data-testid="stNumberInput"] input {
             color: #111827 !important;
             -webkit-text-fill-color: #111827 !important;
         }
 
-        /* Radio / slider labels */
+        /* Keep radios/sliders white */
         div[data-testid="stRadio"] label,
         div[data-testid="stSlider"] label {
             color: #ffffff !important;
@@ -187,11 +174,6 @@ st.markdown(
         [data-testid="stMarkdownContainer"] * {
             color: #ffffff !important;
             opacity: 1 !important;
-        }
-
-        [data-testid="stDataFrame"] {
-            border-radius: 14px;
-            overflow: hidden;
         }
 
         hr {
